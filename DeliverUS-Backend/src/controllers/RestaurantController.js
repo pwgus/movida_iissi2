@@ -120,12 +120,32 @@ const destroy = async function (req, res) {
   }
 }
 
+const togglePinned = async function (req, res) {
+  try {
+    const restaurant = await Restaurant.findByPk(req.params.restaurantId)
+
+    if (!restaurant) {
+      return res.status(404).json({ message: 'Restaurant not found' })
+    }
+
+    restaurant.pinnedAt = restaurant.pinnedAt ? null : new Date()
+
+    await restaurant.save()
+
+    res.status(200).json({ message: 'Pinned status toggled', pinnedAt: restaurant.pinnedAt })
+  } catch (err) {
+    res.status(500).send(err)
+  }
+}
+
+
 const RestaurantController = {
   index,
   indexOwner,
   create,
   show,
   update,
-  destroy
+  destroy,
+  togglePinned
 }
 export default RestaurantController

@@ -60,8 +60,14 @@ async function _getPinnedRestaurants(req) {
 
 const create = async function (req, res) {
   const newRestaurant = Restaurant.build(req.body)
-  newRestaurant.userId = req.user.id // usuario actualmente autenticado
-  newRestaurant.pinnedAt = req.body.pinnedAt ? new Date() : null
+  newRestaurant.userId = req.user.id
+
+  if ('pinned' in req.body) {
+    newRestaurant.pinnedAt = req.body.pinned === true ? new Date() : null
+  } else {
+    newRestaurant.pinnedAt = req.body.pinnedAt ? new Date(req.body.pinnedAt) : null
+  }
+
   try {
     const restaurant = await newRestaurant.save()
     res.json(restaurant)
@@ -69,6 +75,7 @@ const create = async function (req, res) {
     res.status(500).send(err)
   }
 }
+
 
 const show = async function (req, res) {
   // Only returns PUBLIC information of restaurants

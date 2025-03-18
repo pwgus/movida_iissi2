@@ -24,8 +24,7 @@ module.exports = {
       },
       pinnedAt: {
         allowNull: true, // It is accepted to have no value
-        type: Sequelize.DATE,
-        defaultValue: false // ??
+        type: Sequelize.DATE
       },
       url: {
         type: Sequelize.STRING
